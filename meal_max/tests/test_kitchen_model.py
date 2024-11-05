@@ -207,7 +207,7 @@ def test_get_meal_by_id_bad_id(mock_cursor):
     with pytest.raises(ValueError, match="Meal with ID 999 not found"):
         get_meal_by_id(999)
 
-def test_get_meal_by_compound_key(mock_cursor):
+def test_get_meal_by_name(mock_cursor):
     # Simulate that the meal exists (meal_name = "Meal Name")
     mock_cursor.fetchone.return_value = (1, "Meal Name", "Meal Cuisine", 20.0, "MED", False)
 
@@ -231,7 +231,7 @@ def test_get_meal_by_compound_key(mock_cursor):
     actual_arguments = mock_cursor.execute.call_args[0][1]
 
     # Assert that the SQL query was executed with the correct arguments
-    expected_arguments = ("Meal Name")
+    expected_arguments = ("Meal Name",)
     assert actual_arguments == expected_arguments, f"The SQL query arguments did not match. Expected {expected_arguments}, got {actual_arguments}."
 
 def test_get_leaderboard(mock_cursor):
