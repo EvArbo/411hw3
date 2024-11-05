@@ -95,7 +95,7 @@ def test_create_meal_invalid_price():
     """Test error when trying to create a meal with an invalid price (e.g., negative)."""
 
     # Attempt to create a meal with negative price
-    with pytest.raises(ValueError, match="Invalid price: 20.0. Price must be a positive number."):
+    with pytest.raises(ValueError, match="Invalid price: -20.0. Price must be a positive number."):
         create_meal(meal="Meal Name", cuisine="Cuisine Name", price=-20.0, difficulty="MED")
 
 def test_delete_meal(mock_cursor):
