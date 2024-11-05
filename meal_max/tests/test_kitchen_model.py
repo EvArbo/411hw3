@@ -81,21 +81,21 @@ def test_create_meal_duplicate(mock_cursor):
     mock_cursor.execute.side_effect = sqlite3.IntegrityError("UNIQUE constraint failed: meals.meal")
 
     # Expect the function to raise a ValueError with a specific message when handling the IntegrityError
-    with pytest.raises(ValueError, match="Duplicate meal name: 'Meal Name'"):
+    with pytest.raises(ValueError, match="Meal with name 'Meal Name' already exists"):
         create_meal(meal="Meal Name", cuisine="Cuisine Name", price=20.0, difficulty="MED")
 
 def test_create_meal_invalid_difficulty():
     """Test error when trying to create a meal with an invalid difficulty (e.g not 'LOW', 'MED', 'HIGH')"""
 
     # Attempt to create a song with an invalid difficulty
-    with pytest.raises(ValueError, match="Invalid difficulty level: 'SUPER'. Must be 'LOW', 'MED', or 'HIGH'."):
+    with pytest.raises(ValueError, match=f"Invalid difficulty level: {difficulty}. Must be 'LOW', 'MED', or 'HIGH'."):
         create_meal(meal="Meal Name", cuisine="Cuisine Name", price=20.0, difficulty="SUPER")
 
 def test_create_meal_invalid_price():
     """Test error when trying to create a meal with an invalid price (e.g., negative)."""
 
     # Attempt to create a meal with negative price
-    with pytest.raises(ValueError, match="Invalid price: -20.00. Price must be a positive number."):
+    with pytest.raises(ValueError, match=f"Invalid price: {price}. Price must be a positive number."):
         create_meal(meal="Meal Name", cuisine="Cuisine Name", price=-20.0, difficulty="MED")
 
 def test_delete_meal(mock_cursor):
@@ -146,7 +146,7 @@ def test_delete_meal_already_deleted(mock_cursor):
     mock_cursor.fetchone.return_value = ([True])
 
     # Expect a ValueError when attempting to delete a meal that's already been deleted
-    with pytest.raises(ValueError, match="Meal with ID 999 has already been deleted"):
+    with pytest.raises(ValueError, match=f"Meal with ID {meal_id} has been deleted"):
         delete_meal(999)
 
 def test_clear_meals(mock_cursor, mocker):
