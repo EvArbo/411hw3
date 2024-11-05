@@ -174,7 +174,7 @@ def test_clear_meals(mock_cursor, mocker):
 
 def test_get_meal_by_id(mock_cursor):
     # Simulate that the meal exists (id = 1)
-    mock_cursor.fetchone.return_value = (1, "Meal Name", "Meal Cuisine", 20.0, "MED")
+    mock_cursor.fetchone.return_value = (1, "Meal Name", "Meal Cuisine", 20.0, "MED", False)
 
     # Call the function and check the result
     result = get_meal_by_id(1)
@@ -209,7 +209,7 @@ def test_get_meal_by_id_bad_id(mock_cursor):
 
 def test_get_meal_by_compound_key(mock_cursor):
     # Simulate that the meal exists (meal_name = "Meal Name")
-    mock_cursor.fetchone.return_value = (1, "Meal Name", "Meal Cuisine", 20.0, "MED")
+    mock_cursor.fetchone.return_value = (1, "Meal Name", "Meal Cuisine", 20.0, "MED", False)
 
     # Call the function and check the result
     result = get_meal_by_name("Meal Name")
