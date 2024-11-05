@@ -266,35 +266,3 @@ def test_get_leaderboard(mock_cursor):
 
     assert actual_query == expected_query, "The SQL query did not match the expected structure."
 
-def test_get_all_songs_ordered_by_play_count(mock_cursor):
-    """Test retrieving all songs ordered by play count."""
-
-    # Simulate that there are multiple songs in the database
-    mock_cursor.fetchall.return_value = [
-        (2, "Artist B", "Song B", 2021, "Pop", 180, 20),
-        (1, "Artist A", "Song A", 2020, "Rock", 210, 10),
-        (3, "Artist C", "Song C", 2022, "Jazz", 200, 5)
-    ]
-
-    # Call the get_all_songs function with sort_by_play_count = True
-    songs = get_all_songs(sort_by_play_count=True)
-
-    # Ensure the results are sorted by play count
-    expected_result = [
-        {"id": 2, "artist": "Artist B", "title": "Song B", "year": 2021, "genre": "Pop", "duration": 180, "play_count": 20},
-        {"id": 1, "artist": "Artist A", "title": "Song A", "year": 2020, "genre": "Rock", "duration": 210, "play_count": 10},
-        {"id": 3, "artist": "Artist C", "title": "Song C", "year": 2022, "genre": "Jazz", "duration": 200, "play_count": 5}
-    ]
-
-    assert songs == expected_result, f"Expected {expected_result}, but got {songs}"
-
-    # Ensure the SQL query was executed correctly
-    expected_query = normalize_whitespace("""
-        SELECT id, artist, title, year, genre, duration, play_count
-        FROM songs
-        WHERE deleted = FALSE
-        ORDER BY play_count DESC
-    """)
-    actual_query = normalize_whitespace(mock_cursor.execute.call_args[0][0])
-
-    assert actual_query == expected_query, "The SQL query did not match the expected structure."
