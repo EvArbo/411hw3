@@ -81,7 +81,7 @@ def test_create_meal_duplicate(mock_cursor):
     mock_cursor.execute.side_effect = sqlite3.IntegrityError("UNIQUE constraint failed: meals.meal")
 
     # Expect the function to raise a ValueError with a specific message when handling the IntegrityError
-    with pytest.raises(ValueError, match="Duplicate meal name: %s"):
+    with pytest.raises(ValueError, match="Duplicate meal name: 'Meal Name'"):
         create_meal(meal="Meal Name", cuisine="Cuisine Name", price=20.0, difficulty="MED")
 
 def test_create_meal_invalid_difficulty():
