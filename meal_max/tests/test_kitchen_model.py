@@ -88,7 +88,7 @@ def test_create_meal_invalid_difficulty():
     """Test error when trying to create a meal with an invalid difficulty (e.g not 'LOW', 'MED', 'HIGH')"""
 
     # Attempt to create a song with an invalid difficulty
-    with pytest.raises(ValueError, match="Invalid difficulty level: 'SUPER'. Must be 'LOW', 'MED', or 'HIGH'."):
+    with pytest.raises(ValueError, match="Invalid difficulty level: SUPER. Must be 'LOW', 'MED', or 'HIGH'."):
         create_meal(meal="Meal Name", cuisine="Cuisine Name", price=20.0, difficulty="SUPER")
 
 def test_create_meal_invalid_price():
