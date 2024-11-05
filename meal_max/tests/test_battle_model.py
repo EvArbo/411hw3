@@ -1,6 +1,6 @@
 import pytest
-from unittest.mock import Mock
 
+from unittest.mock import Mock
 from meal_max.models.battle_model import BattleModel
 from meal_max.models.kitchen_model import Meal
 
@@ -9,6 +9,7 @@ def battle_model():
     """Fixture to provide a new instance of BattleModel for each test."""
     return BattleModel()
 
+"""Fixtures providing sample meals"""
 @pytest.fixture
 def sample_meal1():
     return Meal(id=1, meal="Meal 1", cuisine="Cuisine 1", price=10.0, difficulty="LOW")
@@ -37,9 +38,7 @@ def test_battle_greater_delta(battle_model, sample_battle, mocker):
     mocker.patch("meal_max.models.battle_model.get_random", return_value=0.1)
     mock_update_meal_stats = mocker.patch("meal_max.models.battle_model.update_meal_stats")
 
-    result = battle_model.battle()
-
-    assert result == "Meal 1", "Meal 1 is the expected winner"
+    assert battle_model.battle() == "Meal 1", "Meal 1 is the expected winner"
     
     mock_update_meal_stats.assert_any_call(1, 'win')
     mock_update_meal_stats.assert_any_call(2, 'loss')
