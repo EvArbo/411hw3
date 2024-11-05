@@ -239,9 +239,9 @@ def test_get_leaderboard(mock_cursor):
 
     # Simulate that there are multiple meals in the database
     mock_cursor.fetchall.return_value = [
-        (1, "Meal A", "Cuisine A", 20.20, "MED", 5, 2, 0.4, False),
-        (2, "Meal B", "Cuisine B", 20.21, "MED", 2, 2, 1, False),
-        (3, "Meal C", "Cuisine C", 20.22, "MED", 4, 1, 0.25, False)
+        (1, "Meal A", "Cuisine A", 20.20, "MED", 5, 2, 40.0, False),
+        (2, "Meal B", "Cuisine B", 20.21, "MED", 2, 2, 100, False),
+        (3, "Meal C", "Cuisine C", 20.22, "MED", 4, 1, 25.0, False)
     ]
 
     # Call the get_all_songs function
@@ -249,9 +249,9 @@ def test_get_leaderboard(mock_cursor):
 
     # Ensure the results match the expected output
     expected_result = [
-        {"id": 1, "meal": "Meal A", "cuisine": "Cuisine A", "price": 20.20, "difficulty": "MED", "battles": 5, "wins": 2, "win_pct": 0.4},
-        {"id": 2, "meal": "Meal B", "cuisine": "Cuisine B", "price": 20.21, "difficulty": "MED", "battles": 2, "wins": 2, "win_pct": 1},
-        {"id": 3, "meal": "Meal C", "cuisine": "Cuisine C", "price": 20.22, "difficulty": "MED", "battles": 4, "wins": 1, "win_pct": 0.25}
+        {"id": 1, "meal": "Meal A", "cuisine": "Cuisine A", "price": 20.20, "difficulty": "MED", "battles": 5, "wins": 2, "win_pct": 40.0},
+        {"id": 2, "meal": "Meal B", "cuisine": "Cuisine B", "price": 20.21, "difficulty": "MED", "battles": 2, "wins": 2, "win_pct": 100},
+        {"id": 3, "meal": "Meal C", "cuisine": "Cuisine C", "price": 20.22, "difficulty": "MED", "battles": 4, "wins": 1, "win_pct": 25.0}
     ]
 
     assert meals == expected_result, f"Expected {expected_result}, but got {meals}"
