@@ -128,3 +128,114 @@ get_meal_by_name() {
 # Battle
 #
 ############################################################
+
+battle() {
+  echo "Two meals enter, one meal leaves!"
+  curl -s -X POST "$BASE_URL/battle" | grep -q '"status": "success"'
+  if [ $? -eq 0 ]; then
+    echo "Initiated battle successfully."
+  else
+    echo "Failed to initiate battle."
+    exit 1
+  fi
+}
+
+clear_combatants() {
+  echo "Clearing all combatants..."
+  response=$(curl -s -X POST "$BASE_URL/clear-combatants")
+
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Combatants cleared successfully."
+  else
+    echo "Failed to clear combatants."
+    exit 1
+  fi
+}
+
+get_combatants() {
+  echo "Getting combatants..."
+  response=$(curl -s -X GET "$BASE_URL/get-combatants")
+
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Combatants retrieved successfully."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Combatants JSON:"
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to retrieve combatants."
+    exit 1
+  fi
+}
+
+prep_combatants() {
+  meal=$1
+
+  echo "Prepping meal: $meal..."
+  response=$(curl -s -X POST "$BASE_URL/prep-combatants" \
+    -H "Content-Type: application/json" \
+    -d "{\"meal\":\"$meal}")
+
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal prepped for battle successfully."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Meal JSON:"
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to prep meal for battle."
+    exit 1
+  fi
+}
+
+######################################################
+#
+# Leaderboard
+#
+######################################################
+
+get_leaderboard() {
+  echo "Getting mela leaderboard sorted by wins..."
+  response=$(curl -s -X GET "$BASE_URL/leaderboard?sort=wins")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal leaderboard retrieved successfully."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Leaderboard JSON (sorted by wins):"
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to get meal leaderboard."
+    exit 1
+  fi
+}
+
+# Health checks
+check_health
+check_db
+
+# Clear the catalog
+clear_catalog
+
+# Create meals
+create_meal "Meal 1" "Cuisine 1" 10.0 "LOW"
+create_meal "Meal 2" "Cuisine 2" 15.0 "MED"
+create_meal "Meal 3" "Cuisine 3" 20.0 "HIGH"
+
+delete_meal_by_id 1
+
+get_meal_by_id 2
+get_meal_by_name "Meal 3"
+
+prep_combatants "Meal 2"
+prep_combatants "Meal 3"
+
+get_combatants
+
+battle
+
+clear_combatants
+
+get_leaderboard
+
+echo "All tests passed successfully!"
+
