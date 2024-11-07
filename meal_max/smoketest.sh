@@ -107,19 +107,18 @@ get_meal_by_id() {
 }
 
 get_meal_by_name() {
-  meal_name=$1
+  meal=$1
 
-  echo "Getting meal by name (Meal Name: '$meal_name')..."
-  response=$(curl -s -X GET "$BASE_URL/get-meal-by-name/$meal_name")
-  echo $response
+  echo "Getting meal by meal name (Meal Name: '$meal')..."
+  response=$(curl -s -X GET "$BASE_URL/get-meal-by-name/$meal")
   if echo "$response" | grep -q '"status": "success"'; then
-    echo "Meal retrieved successfully by name ($meal_name)."
+    echo "Meal retrieved successfully by meal name."
     if [ "$ECHO_JSON" = true ]; then
-      echo "Meal JSON (name $meal_name):"
+      echo "Meal JSON (by meal name):"
       echo "$response" | jq .
     fi
   else
-    echo "Failed to get meal by name ($meal_name)."
+    echo "Failed to get meal by meal name."
     exit 1
   fi
 }
@@ -196,8 +195,10 @@ prep_combatant() {
 ######################################################
 
 get_leaderboard() {
-  echo "Getting mela leaderboard sorted by wins..."
-  response=$(curl -s -X GET "$BASE_URL/leaderboard?sort=wins")
+  sort_by=$1
+
+  echo "Getting meal leaderboard sorted by: $sort_by..."
+  response=$(curl -s -X GET "$BASE_URL/leaderboard?sort=$sort_by")
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Meal leaderboard retrieved successfully."
     if [ "$ECHO_JSON" = true ]; then
@@ -218,19 +219,19 @@ check_db
 clear_catalog
 
 # Create meals
-create_meal "Meal 1" "Cuisine 1" 10.0 "LOW"
-create_meal "Meal 2" "Cuisine 2" 15.0 "MED"
-create_meal "Meal 3" "Cuisine 3" 20.0 "HIGH"
+create_meal "Pork" "Cuisine 1" 10.0 "LOW"
+create_meal "Chicken" "Cuisine 2" 15.0 "MED"
+create_meal "Beef" "Cuisine 3" 20.0 "HIGH"
 
 delete_meal_by_id 1
 
-#get_meal_by_id 2
-#get_meal_by_name "Meal 2"
+get_meal_by_id 2
+get_meal_by_name "Beef"
 
 clear_combatants
 
-prep_combatant "Meal 2"
-prep_combatant "Meal 3"
+prep_combatant "Chicken"
+prep_combatant "Beef"
 
 get_combatants
 
@@ -238,6 +239,7 @@ battle
 
 clear_combatants
 
-get_leaderboard
+get_leaderboard "wins"
+get_leaderboard "win_pct"
 
 echo "All tests passed successfully!"
